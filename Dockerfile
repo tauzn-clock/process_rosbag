@@ -26,4 +26,4 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
-RUN git clone https://github.com/cvg/process_rosbag
+RUN git clone https://github.com/tauzn-clock/process_rosbag
