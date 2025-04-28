@@ -7,7 +7,7 @@ import cv2
 from cv_bridge import CvBridge
 from match import match
 
-DESTINATION_DIR = '/scratchdata/processed/stair4'
+DESTINATION_DIR = '/home/daoxin/scratchdata/processed/stair4_filtered'
 
 if not os.path.exists(DESTINATION_DIR):
     os.makedirs(DESTINATION_DIR)
@@ -17,7 +17,7 @@ if not os.path.exists(os.path.join(DESTINATION_DIR, "depth")):
     os.makedirs(os.path.join(DESTINATION_DIR, "depth"))
 
 # Open the rosbag file
-bag = rosbag.Bag('/scratchdata/stair4.bag', 'r')
+bag = rosbag.Bag('/home/daoxin/scratchdata/stair4.bag', 'r')
 
 # Camera Info
 camera_info = {}
@@ -51,6 +51,9 @@ for topic, msg, t in bag.read_messages(topics=['/camera/depth/image_raw']):
 
 for topic, msg, t in bag.read_messages(topics=['/camera/gyro_accel/sample']):
     pose.append(([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z, msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z],t))
+
+from filter_odom import filter_odom
+pose = filter_odom(pose, 20)
 
 depth = match(rgb,depth)
 pose = match(rgb,pose)
